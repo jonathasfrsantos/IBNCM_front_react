@@ -1,0 +1,36 @@
+{
+  "lancamentos": [
+    {
+      "id": 1,
+      "data": "2023-03-03",
+      "valor": 150,
+      "historico": "fulano",
+      "finalidade": "dízimos",
+      "bancoCaixa": "CAIXA"
+    },
+    {
+      "data": "2023-03-03",
+      "valor": "200",
+      "historico": "beltrano",
+      "finalidade": "dízimos",
+      "bancoCaixa": "caixa",
+      "id": 2
+    },
+    {
+      "data": "2023-03-03",
+      "valor": "200",
+      "historico": "beltrano trump jr",
+      "finalidade": "dízimos",
+      "bancoCaixa": "caixa",
+      "id": 3
+    },
+    {
+      "data": "2023-03-04",
+      "valor": "200",
+      "historico": "rato trump jr",
+      "finalidade": "ofertas",
+      "bancoCaixa": "caixa",
+      "id": 4
+    }
+  ]
+}
