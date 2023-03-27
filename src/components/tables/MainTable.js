@@ -10,16 +10,16 @@ export function MainTable() {
   const [selectedTransaction, setSelectedTransaction] = useState(null); // state para recuperar o item selecionado da tabela
 
   const handleEdit = (transaction) => {  // handle que "seta" o state do produto selecionado
-    setSelectedTransaction(transaction);
     setShowForm(true);
+    setSelectedTransaction(transaction);
+   
   }
 
   const handleClose = () => { // fecha o modal
     setShowForm(false);
   };
   const handleShowForm = () => { // exibie o modal
-    setSelectedTransaction(null)
-    setShowForm((prevState) => (prevState = true));
+    setShowForm(true);
   };
 
   const handleTransactionAdded = (addedTransaction) => {  // handle que "seta" o state do produto criado
@@ -30,9 +30,16 @@ export function MainTable() {
     setTransactions((prevTransaction) =>
       prevTransaction.map((transaction) =>
         transaction.id === updatedTransaction.id ? updatedTransaction : transaction
+    
       )
     );
   };
+
+  useEffect(() => {   // hook para não copiar os dados do último formulário aberto na hora de inserir um novo registro
+    if (!showForm) {
+      setSelectedTransaction(null);
+    }
+  }, [showForm]);
 
   useEffect(() => {            // hook que lista os itens do BD na tabela
     async function fetchProducts() {
@@ -70,7 +77,8 @@ export function MainTable() {
           <tr>
             <th>#</th>
             <th>Data</th>
-            <th>Valor R$</th>
+            <th>Entrada R$</th>
+            <th>Saída R$</th>
             <th>Histórico</th>
             <th>Finalidade</th>
             <th>Banco/Caixa</th>
@@ -82,7 +90,8 @@ export function MainTable() {
               <tr key={index}>
                 <td>{index + 1}</td>
                 <td>{item.data}</td>
-                <td>{item.valor}</td>
+                <td>{item.entrada}</td>
+                <td>{item.saida}</td>
                 <td>{item.historico}</td>
                 <td>{item.finalidade}</td>
                 <td>{item.bancoCaixa}</td>

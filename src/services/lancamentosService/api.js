@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseUrl = "http://localhost:3000/lancamentos"; // criar uma constante da URL da API servidor
+const baseUrl = "http://localhost:8080/lancamentos"; // criar uma constante da URL da API servidor
 
 export const api = {
   async getAll() {
