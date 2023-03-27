@@ -6,42 +6,57 @@ import { MainForm } from "../forms/MainForm";
 
 export function MainTable() {
   const [transactions, setTransactions] = useState([]); // state inicial para o objeto "product"
-  const [showForm, setShowForm] = useState(false);      // state para controlar a abertura e fechamento do modal/form
+  const [showForm, setShowForm] = useState(false); // state para controlar a abertura e fechamento do modal/form
   const [selectedTransaction, setSelectedTransaction] = useState(null); // state para recuperar o item selecionado da tabela
 
-  const handleEdit = (transaction) => {  // handle que "seta" o state do produto selecionado
+  const handleEdit = (transaction) => {
+    // handle que "seta" o state do produto selecionado
     setShowForm(true);
     setSelectedTransaction(transaction);
-   
-  }
+  };
 
-  const handleClose = () => { // fecha o modal
+  const handleClose = () => {
+    // fecha o modal
     setShowForm(false);
   };
-  const handleShowForm = () => { // exibie o modal
+  const handleShowForm = () => {
+    // exibie o modal
     setShowForm(true);
   };
 
-  const handleTransactionAdded = (addedTransaction) => {  // handle que "seta" o state do produto criado
+  const handleTransactionAdded = (addedTransaction) => {
+    // handle que "seta" o state do produto criado
     setTransactions((prevProducts) => [...prevProducts, addedTransaction]);
   };
-
-  const handleTransactionUpdated = (updatedTransaction) => { // handle que "seta" o state do produto atualizado
-    setTransactions((prevTransaction) =>
-      prevTransaction.map((transaction) =>
-        transaction.id === updatedTransaction.id ? updatedTransaction : transaction
-    
-      )
+  const handleTransactionUpdated = (updatedTransaction) => {
+    setTransactions((prevTransactions) =>
+      prevTransactions.map((transaction) => {
+        if (transaction.id === updatedTransaction.id) {
+          if (updatedTransaction.entrada !== null) {
+            // se a coluna "entrada" for diferente de nula, definimos o valor do campo "Valor" com o valor da coluna "entrada"
+            return { ...updatedTransaction, valor: updatedTransaction.entrada };
+          } else {
+            // caso contrário, mantemos o valor atual do campo "Valor"
+            return updatedTransaction;
+          }
+        } else {
+          return transaction;
+        }
+      })
     );
   };
+  
+ 
 
-  useEffect(() => {   // hook para não copiar os dados do último formulário aberto na hora de inserir um novo registro
+  useEffect(() => {
+    // hook para não copiar os dados do último formulário aberto na hora de inserir um novo registro
     if (!showForm) {
       setSelectedTransaction(null);
     }
   }, [showForm]);
 
-  useEffect(() => {            // hook que lista os itens do BD na tabela
+  useEffect(() => {
+    // hook que lista os itens do BD na tabela
     async function fetchProducts() {
       const response = await api.getAll();
       setTransactions(response);
@@ -50,17 +65,15 @@ export function MainTable() {
     fetchProducts();
   }, []);
 
- 
-  const handleDelete = (id) => {       // handle delete
+  const handleDelete = (id) => {
+    // handle delete
     if (window.confirm("Tem certeza que deseja excluir esse lançamento?")) {
-      api.delete(id)
-        .then(() => {
-          setTransactions(transactions.filter(product => product.id !== id));
-        })
+      api.delete(id).then(() => {
+        setTransactions(transactions.filter((product) => product.id !== id));
+      });
     }
   };
-  
-  
+
   // observe os props que são passados do componente mainForm e que são chamados no MainTable
   return (
     <Fragment>

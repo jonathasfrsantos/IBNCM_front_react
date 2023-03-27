@@ -12,7 +12,7 @@ export function MainForm({
   const [transaction, setTransaction] = useState({
     // estado inicial de um objeto "product"
     data: "",
-    valor: 0.0,
+    valor: "",
     entrada: 0.0,
     saida: 0.0,
     historico: "",
@@ -30,7 +30,7 @@ export function MainForm({
     } else {
       setTransaction({
         data: "",
-        valor: 0.0,
+        valor: "",
         entrada: 0.0,
         saida: 0.0,
         historico: "",
@@ -71,7 +71,8 @@ export function MainForm({
     }
 
     setTransaction({
-      valor: 0.0,
+      data:"",
+      valor: "",
       historico: "",
       finalidade: "",
       bancoCaixa: "",
