@@ -10,6 +10,7 @@ export function MainForm({
   show,
   close,
   selectedTransaction,
+  title
 }) {
   const [transaction, setTransaction] = useState({
     data: "",
@@ -81,13 +82,12 @@ export function MainForm({
     <Fragment>
       <Modal show={show} onHide={close}>
         <Modal.Header closeButton>
-          <Modal.Title> Novo Lançamento</Modal.Title>
+          <Modal.Title> {title}</Modal.Title>
         </Modal.Header>
-
         <Modal.Body>
-          <Form.Group controlId="formGroupTipoMovimento">
-            <Form.Label>ESCOLHA ENTRE ENTRADA OU SAÍDA</Form.Label>
-            <div>
+          <Form.Group className="radio-select-container">
+            <Form.Label className="radio-select-container" >ESCOLHA ENTRE ENTRADA OU SAÍDA</Form.Label>
+            <div className="select-container"> 
               <Form.Check
                 inline
                 label="Entrada"

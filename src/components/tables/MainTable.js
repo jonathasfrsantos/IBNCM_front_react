@@ -52,6 +52,7 @@ export function MainTable() {
     // hook para não copiar os dados do último formulário aberto na hora de inserir um novo registro
     if (!showForm) {
       setSelectedTransaction(null);
+      setTitle("Novo Lançamento")
     }
   }, [showForm]);
 
