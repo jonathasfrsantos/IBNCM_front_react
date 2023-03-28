@@ -7,12 +7,13 @@ import { MainForm } from "../forms/MainForm";
 export function MainTable() {
   const [transactions, setTransactions] = useState([]); // state inicial para o objeto "product"
   const [showForm, setShowForm] = useState(false); // state para controlar a abertura e fechamento do modal/form
-  const [selectedTransaction, setSelectedTransaction] = useState(null); // state para recuperar o item selecionado da tabela
+  const [selectedTransaction, setSelectedTransaction] = useState({}); // state para recuperar o item selecionado da tabela
 
   const handleEdit = (transaction) => {
     // handle que "seta" o state do produto selecionado
     setShowForm(true);
-    setSelectedTransaction(transaction);
+    setSelectedTransaction(transaction)
+    console.log(transaction)
   };
 
   const handleClose = () => {
@@ -28,24 +29,22 @@ export function MainTable() {
     // handle que "seta" o state do produto criado
     setTransactions((prevProducts) => [...prevProducts, addedTransaction]);
   };
+
   const handleTransactionUpdated = (updatedTransaction) => {
-    setTransactions((prevTransactions) =>
-      prevTransactions.map((transaction) => {
-        if (transaction.id === updatedTransaction.id) {
-          if (updatedTransaction.entrada !== null) {
-            // se a coluna "entrada" for diferente de nula, definimos o valor do campo "Valor" com o valor da coluna "entrada"
-            return { ...updatedTransaction, valor: updatedTransaction.entrada };
-          } else {
-            // caso contrário, mantemos o valor atual do campo "Valor"
-            return updatedTransaction;
-          }
-        } else {
-          return transaction;
-        }
-      })
+    // handle que "seta" o state do produto atualizado
+    setTransactions((prevTransaction) =>
+      prevTransaction.map((transaction) =>
+        transaction.id === updatedTransaction.id
+          ? updatedTransaction
+          : transaction
+
+        
+      )
+      
     );
+    console.log(updatedTransaction);
   };
-  
+
  
 
   useEffect(() => {
@@ -79,8 +78,8 @@ export function MainTable() {
     <Fragment>
       <Button onClick={handleShowForm}>Adicionar produto</Button>
       <MainForm
-        onTransactiontUpdated={handleTransactionUpdated}
-        onTransactiontAdded={handleTransactionAdded}
+        onTransactionUpdated={handleTransactionUpdated}
+        onTransactionAdded={handleTransactionAdded}
         show={showForm}
         close={handleClose}
         selectedTransaction={selectedTransaction}

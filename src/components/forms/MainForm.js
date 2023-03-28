@@ -3,8 +3,8 @@ import { Button, Form, Modal } from "react-bootstrap";
 import { api } from "../../services/lancamentosService/api";
 
 export function MainForm({
-  onTransactiontAdded,
-  onTransactiontUpdated,
+  onTransactionAdded,
+  onTransactionUpdated,
   show,
   close,
   selectedTransaction,
@@ -12,7 +12,7 @@ export function MainForm({
   const [transaction, setTransaction] = useState({
     // estado inicial de um objeto "product"
     data: "",
-    valor: "",
+    valor: 0.0,
     entrada: 0.0,
     saida: 0.0,
     historico: "",
@@ -24,60 +24,96 @@ export function MainForm({
 
 
   useEffect(() => {
-    // useEffect para checar se é um product selecionado ou não
     if (selectedTransaction) {
-      setTransaction(selectedTransaction);
-    } else {
-      setTransaction({
-        data: "",
-        valor: "",
-        entrada: 0.0,
-        saida: 0.0,
-        historico: "",
-        finalidade: "",
-        bancoCaixa: "",
-      });
+      if (selectedTransaction.saida !== 0) {
+        setTransactionType("saida");
+        setTransaction(prevTransaction => ({
+          ...prevTransaction,
+          data: selectedTransaction.data,
+          valor: selectedTransaction.saida,
+          entrada: 0.0,
+          saida: selectedTransaction.saida,
+          historico: selectedTransaction.historico,
+          finalidade: selectedTransaction.finalidade,
+          bancoCaixa: selectedTransaction.bancoCaixa
+        }));
+      } else if (selectedTransaction.entrada !== 0) {
+        setTransactionType("entrada");
+        setTransaction(prevTransaction => ({
+          ...prevTransaction,
+          data: selectedTransaction.data,
+          valor: selectedTransaction.entrada,
+          entrada: selectedTransaction.entrada,
+          saida: 0.0,
+          historico: selectedTransaction.historico,
+          finalidade: selectedTransaction.finalidade,
+          bancoCaixa: selectedTransaction.bancoCaixa
+        }));
+      } else {
+        setTransaction({
+          data: "",
+          valor: 0.0,
+          entrada: 0.0,
+          saida: 0.0,
+          historico: "",
+          finalidade: "",
+          bancoCaixa: "",
+        });
+      }
+  
     }
   }, [selectedTransaction]);
+
+  
+  
+
 
   const handleChange = (e) => {
     setTransaction({ ...transaction, [e.target.name]: e.target.value }); // handleChange é usado para acompanhar os estados que o usuário está digitando no input
   };
 
   const handleSubmit = async (e) => {
-    // handleSubmit verifica se é acionará um método post ou put
     e.preventDefault();
-
+  
     if (selectedTransaction) {
-      const updatedTransaction = await api.update(
-        selectedTransaction.id,
-        transaction
-      );
-      onTransactiontUpdated(updatedTransaction);
-      close();
-    } else {
-      if(transactionType === "entrada") {
+      if (transactionType === "entrada") {
         transaction.entrada = transaction.valor;
-        transaction.saida = 0.0; 
-        console.log(transaction)
+        transaction.saida = 0.0;
       } else {
         transaction.saida = transaction.valor;
-        transaction.entrada = 0.0; 
-        console.log(transaction)
+        transaction.entrada = 0.0;
+      }
+      const updatedTransaction = await api.update(selectedTransaction.id, transaction);
+      onTransactionUpdated(updatedTransaction);
+      close();
+    } else {
+      if (transactionType === "entrada") {
+        transaction.entrada = transaction.valor;
+        transaction.saida = 0.0;
+      } else {
+        transaction.saida = transaction.valor;
+        transaction.entrada = 0.0;
       }
       const addedTransaction = await api.create(transaction);
-      onTransactiontAdded(addedTransaction);
-      console.log(transaction)
+      onTransactionAdded(addedTransaction);
     }
-
+  
     setTransaction({
-      data:"",
-      valor: "",
+      data: "",
+      valor: 0.0,
+      entrada:0.0,
+      saida:0.0,
       historico: "",
       finalidade: "",
       bancoCaixa: "",
     });
   };
+  
+
+
+
+
+ 
   return (
     <Fragment>
       <Modal show={show} onHide={close}>
