@@ -1,4 +1,5 @@
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import moment from "moment/moment";
 import { Fragment, useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import { api } from "../../services/lancamentosService/api";
@@ -101,7 +102,7 @@ export function MainTable() {
             return (
               <tr key={index}>
                 <td>{index + 1}</td>
-                <td>{item.data}</td>
+                <td>{moment(item.data).format("DD/MM/YYYY")}</td>
                 <td>{item.entrada}</td>
                 <td>{item.saida}</td>
                 <td>{item.historico}</td>
