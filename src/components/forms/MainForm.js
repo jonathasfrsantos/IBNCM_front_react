@@ -80,16 +80,15 @@ export function MainForm({
 
   return (
     <Fragment>
-      <Modal show={show} onHide={close}>
+      <Modal show={show} onHide={close} centered>
         <Modal.Header closeButton>
-          <Modal.Title> {title}</Modal.Title>
+          <Modal.Title className="modal-title"> {title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form.Group className="radio-select-container">
-            <Form.Label className="radio-select-container" >ESCOLHA ENTRE ENTRADA OU SAÍDA</Form.Label>
-            <div className="select-container"> 
-              <Form.Check
-                inline
+            <Form.Label className="radio-select-title" >ESCOLHA ENTRE ENTRADA OU SAÍDA</Form.Label>
+            <Form.Check className="radio-select"
+        
                 label="Entrada"
                 type="radio"
                 name="tipoMovimento"
@@ -98,8 +97,8 @@ export function MainForm({
                 onChange={(e) => setTransactionType(e.target.value)}
                 disabled={!!selectedTransaction}
               />
-              <Form.Check
-                inline
+            <Form.Check className="radio-select"
+            
                 label="Saída"
                 type="radio"
                 name="tipoMovimento"
@@ -108,7 +107,6 @@ export function MainForm({
                 onChange={(e) => setTransactionType(e.target.value)}
                 disabled={!!selectedTransaction}
               />
-            </div>
           </Form.Group>
           <Form onSubmit={handleSubmit}>
             <Form.Group>

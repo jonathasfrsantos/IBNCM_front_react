@@ -1,8 +1,12 @@
-
-
-
-#radio-select-container {
-    text-align: center;
-    align-items: center;
-
+.modal-header {
+    background-color: aliceblue
 }
+
+
+.modal-title {
+    margin-left: 120px;
+    text-align: center;
+    display: flex;
+   
+}
+
