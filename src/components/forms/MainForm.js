@@ -1,6 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { api } from "../../services/lancamentosService/api";
+import ClearForm from "../../utils/ClearForm";
 
 export function MainForm({
   onTransactionAdded,
@@ -10,7 +11,6 @@ export function MainForm({
   selectedTransaction,
 }) {
   const [transaction, setTransaction] = useState({
-    // estado inicial de um objeto "product"
     data: "",
     valor: 0.0,
     entrada: 0.0,
@@ -22,51 +22,21 @@ export function MainForm({
 
   const [transactionType, setTransactionType] = useState("entrada");
 
-
   useEffect(() => {
     if (selectedTransaction) {
-      if (selectedTransaction.saida !== 0) {
-        setTransactionType("saida");
-        setTransaction(prevTransaction => ({
-          ...prevTransaction,
-          data: selectedTransaction.data,
-          valor: selectedTransaction.saida,
-          entrada: 0.0,
-          saida: selectedTransaction.saida,
-          historico: selectedTransaction.historico,
-          finalidade: selectedTransaction.finalidade,
-          bancoCaixa: selectedTransaction.bancoCaixa
-        }));
-      } else if (selectedTransaction.entrada !== 0) {
-        setTransactionType("entrada");
-        setTransaction(prevTransaction => ({
-          ...prevTransaction,
-          data: selectedTransaction.data,
-          valor: selectedTransaction.entrada,
-          entrada: selectedTransaction.entrada,
-          saida: 0.0,
-          historico: selectedTransaction.historico,
-          finalidade: selectedTransaction.finalidade,
-          bancoCaixa: selectedTransaction.bancoCaixa
-        }));
-      } else {
-        setTransaction({
-          data: "",
-          valor: 0.0,
-          entrada: 0.0,
-          saida: 0.0,
-          historico: "",
-          finalidade: "",
-          bancoCaixa: "",
-        });
-      }
-  
+      const { entrada, saida, ...transactionData } = selectedTransaction;
+      setTransactionType(entrada !== 0 ? "entrada" : "saida");
+      setTransaction((prevTransaction) => ({
+        ...prevTransaction,
+        ...transactionData,
+        valor: entrada || saida,
+        entrada: entrada || 0.0,
+        saida: saida || 0.0,
+      }));
+    } else {
+      ClearForm(setTransaction);
     }
   }, [selectedTransaction]);
-
-  
-  
-
 
   const handleChange = (e) => {
     setTransaction({ ...transaction, [e.target.name]: e.target.value }); // handleChange é usado para acompanhar os estados que o usuário está digitando no input
@@ -74,7 +44,9 @@ export function MainForm({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
+    let addedTransaction;
+
     if (selectedTransaction) {
       if (transactionType === "entrada") {
         transaction.entrada = transaction.valor;
@@ -83,7 +55,10 @@ export function MainForm({
         transaction.saida = transaction.valor;
         transaction.entrada = 0.0;
       }
-      const updatedTransaction = await api.update(selectedTransaction.id, transaction);
+      const updatedTransaction = await api.update(
+        selectedTransaction.id,
+        transaction
+      );
       onTransactionUpdated(updatedTransaction);
       close();
     } else {
@@ -94,26 +69,13 @@ export function MainForm({
         transaction.saida = transaction.valor;
         transaction.entrada = 0.0;
       }
-      const addedTransaction = await api.create(transaction);
+      addedTransaction = await api.create(transaction);
       onTransactionAdded(addedTransaction);
     }
-  
-    setTransaction({
-      data: "",
-      valor: 0.0,
-      entrada:0.0,
-      saida:0.0,
-      historico: "",
-      finalidade: "",
-      bancoCaixa: "",
-    });
+
+   ClearForm(setTransaction);
   };
-  
 
-
-
-
- 
   return (
     <Fragment>
       <Modal show={show} onHide={close}>
@@ -133,6 +95,7 @@ export function MainForm({
                 value="entrada"
                 checked={transactionType === "entrada"}
                 onChange={(e) => setTransactionType(e.target.value)}
+                disabled={!!selectedTransaction}
               />
               <Form.Check
                 inline
@@ -142,6 +105,7 @@ export function MainForm({
                 value="saida"
                 checked={transactionType === "saida"}
                 onChange={(e) => setTransactionType(e.target.value)}
+                disabled={!!selectedTransaction}
               />
             </div>
           </Form.Group>
