@@ -2,6 +2,7 @@ import { Fragment, useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { api } from "../../services/lancamentosService/api";
 import ClearForm from "../../utils/ClearForm";
+import './styles.css';
 
 export function MainForm({
   onTransactionAdded,
