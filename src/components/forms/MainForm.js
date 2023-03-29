@@ -83,7 +83,7 @@ export function MainForm({
   return (
     <Fragment>
       <Modal show={show} onHide={close} centered>
-        <Modal.Header className="close-btn" closeButton>
+        <Modal.Header closeButton>
           <Modal.Title className="modal-title"> {title}</Modal.Title>
         </Modal.Header>
         <Modal.Body className="modal-container">

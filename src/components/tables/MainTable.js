@@ -77,11 +77,8 @@ export function MainTable() {
 
   // observe os props que são passados do componente mainForm e que são chamados no MainTable
   return (
-    <div>
-      
-      <div className="btn-add-container">
-        <Button className="btn-add-transaciton" onClick={handleShowForm}> + Novo lançamento</Button>
-      </div>
+    <div className="table-container">
+      <Button className="btn-add-transaciton" onClick={handleShowForm}> + Novo lançamento</Button>
       <MainForm
         onTransactionUpdated={handleTransactionUpdated}
         onTransactionAdded={handleTransactionAdded}

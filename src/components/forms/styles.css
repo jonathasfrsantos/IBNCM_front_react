@@ -3,8 +3,14 @@
     border-radius: 5%;
 }
 .modal-header {
-    background: linear-gradient(to bottom right, #0719b4, #387ce2);
+    background: linear-gradient(to bottom , #0719b4, #387ce2);
 }
+
+.modal-header closebutton {
+    color: white;
+}
+
+
 .modal-title {
     margin-left: 120px;
     text-align: center;
