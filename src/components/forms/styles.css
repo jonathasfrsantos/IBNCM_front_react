@@ -48,7 +48,8 @@
   .form-container input {
     flex-basis: 65%;
     margin-left: 1%;
-    margin-bottom: 10px
+    margin-bottom: 10px;
+    font-size: 20px;
   }
   
 
