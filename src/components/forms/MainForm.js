@@ -1,8 +1,8 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { api } from "../../services/lancamentosService/api";
 import ClearForm from "../../utils/ClearForm";
-import './styles.css';
+import "./styles.css";
 
 export function MainForm({
   onTransactionAdded,
@@ -10,7 +10,7 @@ export function MainForm({
   show,
   close,
   selectedTransaction,
-  title
+  title,
 }) {
   const [transaction, setTransaction] = useState({
     data: "",
@@ -23,6 +23,7 @@ export function MainForm({
   });
 
   const [transactionType, setTransactionType] = useState("entrada");
+  const valorRef = useRef(null);
 
   useEffect(() => {
     if (selectedTransaction) {
@@ -75,7 +76,8 @@ export function MainForm({
       onTransactionAdded(addedTransaction);
     }
 
-   ClearForm(setTransaction);
+    ClearForm(setTransaction);
+    
   };
 
   return (
@@ -86,9 +88,12 @@ export function MainForm({
         </Modal.Header>
         <Modal.Body>
           <Form.Group className="radio-select-container">
-            <Form.Label className="radio-select-title" >ESCOLHA ENTRE ENTRADA OU SAÍDA</Form.Label>
-            <Form.Check className="radio-select"
-        
+            <div className="radio-select-title">
+              <Form.Label className>ESCOLHA ENTRE ENTRADA OU SAÍDA</Form.Label>
+            </div>
+            <div className="radio-select">
+              <Form.Check
+                inline
                 label="Entrada"
                 type="radio"
                 name="tipoMovimento"
@@ -97,8 +102,8 @@ export function MainForm({
                 onChange={(e) => setTransactionType(e.target.value)}
                 disabled={!!selectedTransaction}
               />
-            <Form.Check className="radio-select"
-            
+              <Form.Check
+                inline
                 label="Saída"
                 type="radio"
                 name="tipoMovimento"
@@ -107,9 +112,10 @@ export function MainForm({
                 onChange={(e) => setTransactionType(e.target.value)}
                 disabled={!!selectedTransaction}
               />
+            </div>
           </Form.Group>
           <Form onSubmit={handleSubmit}>
-            <Form.Group>
+            <Form.Group className="form-container">
               <Form.Label> Data </Form.Label>
               <Form.Control
                 type="date"
