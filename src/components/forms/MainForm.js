@@ -83,10 +83,10 @@ export function MainForm({
   return (
     <Fragment>
       <Modal show={show} onHide={close} centered>
-        <Modal.Header closeButton>
+        <Modal.Header className="close-btn" closeButton>
           <Modal.Title className="modal-title"> {title}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="modal-container">
           <Form.Group className="radio-select-container">
             <div className="radio-select-title">
               <Form.Label className>ESCOLHA ENTRE ENTRADA OU SAÍDA</Form.Label>
