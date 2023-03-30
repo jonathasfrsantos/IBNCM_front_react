@@ -3,7 +3,7 @@
     border-radius: 5%;
 }
 .modal-header {
-    background: linear-gradient(to bottom , #0719b4, #387ce2);
+    background: rgb(37, 78, 192);
 }
 
 .modal-header closebutton {

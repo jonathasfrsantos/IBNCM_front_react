@@ -1,0 +1,52 @@
+.all-container {
+    text-align: center;
+    margin-top: 120px;
+}
+
+.btn-add-transaciton {
+    margin-bottom: 40px;
+}
+
+.table-container {
+    width: 95%;
+    margin-left: 40px;
+}
+
+
+thead {
+    background: rgb(37,78,192);
+    color: white;
+}
+
+tr {
+    font-weight: bolder;
+    font-size: 18px;
+}
+
+h1 {
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 30px;
+}
+
+button {
+    border: transparent;
+    background-color: transparent;
+}
+
+button .edit-icon {
+    color: rgb(36, 90, 11);
+}
+
+button .delete-icon {
+    color: rgb(204, 61, 61);
+}
+
+.edit-icon {
+    border: white;
+}
+
+
+

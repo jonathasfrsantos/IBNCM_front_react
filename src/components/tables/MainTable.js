@@ -77,7 +77,7 @@ export function MainTable() {
 
   // observe os props que são passados do componente mainForm e que são chamados no MainTable
   return (
-    <div className="table-container">
+    <div className="all-container">
       <Button className="btn-add-transaciton" onClick={handleShowForm}> + Novo lançamento</Button>
       <MainForm
         onTransactionUpdated={handleTransactionUpdated}
@@ -91,7 +91,7 @@ export function MainTable() {
       <h1> IGREJA EVANGÉLICA DO LUGAL TAL</h1>
       <p> Movimento de caixa</p>
       {Array.isArray(transactions) && transactions.length > 0 ? (
-      <Table striped bordered hover>
+      <Table striped  hover >
           <thead>
             <tr>
               <th>#</th>
@@ -101,6 +101,7 @@ export function MainTable() {
               <th>HISTÓRICO</th>
               <th>FINALIDADE</th>
               <th>BANCO/CAIXA</th>
+              <th>AÇÕES</th>
             </tr>
           </thead>
           <tbody>
@@ -118,14 +119,12 @@ export function MainTable() {
                     {" "}
                     <button onClick={() => handleEdit(item)}>
                       {" "}
-                      <EditIcon />
+                      <EditIcon className="edit-icon" />
                     </button>
-                  </td>
-                  <td>
                     {" "}
                     <button onClick={() => handleDelete(item.id)}>
                       {" "}
-                      <DeleteIcon color="red.500" />
+                      <DeleteIcon className="delete-icon" color="red.500" />
                     </button>
                   </td>
                 </tr>
