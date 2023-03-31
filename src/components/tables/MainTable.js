@@ -3,6 +3,7 @@ import moment from "moment/moment";
 import {  useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import { api } from "../../services/lancamentosService/api";
+import { MainCards } from "../cards/MainCards";
 import { MainForm } from "../forms/MainForm";
 import "./styles.css";
 
@@ -78,7 +79,9 @@ export function MainTable() {
   // observe os props que são passados do componente mainForm e que são chamados no MainTable
   return (
     <div className="all-container">
+
       <Button className="btn-add-transaciton" onClick={handleShowForm}> + Novo lançamento</Button>
+    
       <MainForm
         onTransactionUpdated={handleTransactionUpdated}
         onTransactionAdded={handleTransactionAdded}
@@ -90,6 +93,7 @@ export function MainTable() {
       <div className="table-container">
       <h1> IGREJA EVANGÉLICA DO LUGAL TAL</h1>
       <p> Movimento de caixa</p>
+      <MainCards />
       {Array.isArray(transactions) && transactions.length > 0 ? (
       <Table striped  hover >
           <thead>

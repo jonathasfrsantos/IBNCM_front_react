@@ -12,6 +12,24 @@ export const api = {
     }
   },
 
+  async getEntradas() {
+    try {
+      const response = await axios.get(`${baseUrl}/getTotalEntradas`)
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  },
+
+  async getSaidas(){
+    try{
+      const response = await axios.get(`${baseUrl}/getTotalSaidas`)
+      return response.data;
+    }catch (error) {
+      console.error(error);
+    }
+  },
+
   async create(data) {
     try {
       const response = await axios.post(`${baseUrl}`, data);
