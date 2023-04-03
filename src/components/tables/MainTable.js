@@ -1,10 +1,12 @@
-import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { DeleteIcon, EditIcon, SearchIcon } from "@chakra-ui/icons";
 import moment from "moment/moment";
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import { api } from "../../services/lancamentosService/api";
 import { MainCards } from "../cards/MainCards";
 import { MainForm } from "../forms/MainForm";
+
+
 import "./styles.css";
 
 export function MainTable() {
@@ -79,9 +81,25 @@ export function MainTable() {
   // observe os props que são passados do componente mainForm e que são chamados no MainTable
   return (
     <div className="all-container">
+      <Button className="btn-add-transaciton" variant="success"onClick={handleShowForm}>{" "}+ Novo lançamento</Button>
+      <Button className="btn-export-excel" onClick={console.log("click")}>
+        {" "}
+        exportar{" "}
+      </Button>
+      <Button className="btn-print" onClick={console.log("click")}>
+        {" "}
+        imprimir{" "}
+      </Button>
+      <Button className="btn-show" onClick={console.log("click")}>
+        {" "}
+        exibir{" "}
+      </Button>
+      <div className="search-container">
+        <input type="text" placeholder="Pesquisar" />
+        <SearchIcon />
+      
+      </div>
 
-      <Button className="btn-add-transaciton" onClick={handleShowForm}> + Novo lançamento</Button>
-    
       <MainForm
         onTransactionUpdated={handleTransactionUpdated}
         onTransactionAdded={handleTransactionAdded}
@@ -91,54 +109,51 @@ export function MainTable() {
         title={title}
       />
       <div className="table-container">
-      <h1> IGREJA EVANGÉLICA DO LUGAL TAL</h1>
-      <p> Movimento de caixa</p>
-      <MainCards />
-      {Array.isArray(transactions) && transactions.length > 0 ? (
-      <Table striped  hover >
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>DATA</th>
-              <th>ENTRADA R$</th>
-              <th>SAÍDA R$</th>
-              <th>HISTÓRICO</th>
-              <th>FINALIDADE</th>
-              <th>BANCO/CAIXA</th>
-              <th>AÇÕES</th>
-            </tr>
-          </thead>
-          <tbody>
-            {transactions.map((item, index) => {
-              return (
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>{moment(item.data).format("DD/MM/YYYY")}</td>
-                  <td>{item.entrada}</td>
-                  <td>{item.saida}</td>
-                  <td>{item.historico.toUpperCase()}</td>
-                  <td>{item.finalidade.toUpperCase()}</td>
-                  <td>{item.bancoCaixa.toUpperCase()}</td>
-                  <td>
-                    {" "}
-                    <button onClick={() => handleEdit(item)}>
+        <MainCards />
+        {Array.isArray(transactions) && transactions.length > 0 ? (
+          <Table striped hover>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>DATA</th>
+                <th>ENTRADA R$</th>
+                <th>SAÍDA R$</th>
+                <th>HISTÓRICO</th>
+                <th>FINALIDADE</th>
+                <th>BANCO/CAIXA</th>
+                <th>AÇÕES</th>
+              </tr>
+            </thead>
+            <tbody>
+              {transactions.map((item, index) => {
+                return (
+                  <tr key={index}>
+                    <td>{index + 1}</td>
+                    <td>{moment(item.data).format("DD/MM/YYYY")}</td>
+                    <td>{item.entrada}</td>
+                    <td>{item.saida}</td>
+                    <td>{item.historico.toUpperCase()}</td>
+                    <td>{item.finalidade.toUpperCase()}</td>
+                    <td>{item.bancoCaixa.toUpperCase()}</td>
+                    <td>
                       {" "}
-                      <EditIcon className="edit-icon" />
-                    </button>
-                    {" "}
-                    <button onClick={() => handleDelete(item.id)}>
-                      {" "}
-                      <DeleteIcon className="delete-icon" color="red.500" />
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-      </Table>
-      ) : (
-        <p> Não há dados para serem exibidos</p>
-      )}
+                      <button onClick={() => handleEdit(item)}>
+                        {" "}
+                        <EditIcon className="edit-icon" />
+                      </button>{" "}
+                      <button onClick={() => handleDelete(item.id)}>
+                        {" "}
+                        <DeleteIcon className="delete-icon" color="red.500" />
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </Table>
+        ) : (
+          <p> Não há dados para serem exibidos</p>
+        )}
       </div>
     </div>
   );
