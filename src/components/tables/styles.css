@@ -1,11 +1,37 @@
-.all-container {
-    text-align: center;
+
+.btn-container {
     margin-top: 120px;
+display: flex;
+
+  
 }
 
-.btn-add-transaciton {
-    margin-bottom: 40px;
+.btn-container button {
+    margin-left: 20px;
 }
+
+.search-container {
+    display: flex;
+    align-items: center;
+    margin-left: 1000px;
+    border: 1px solid black;
+    border-radius: 5px;
+    
+}
+
+.search-container input {
+    margin-right: 5px;
+    border-color: transparent;
+    
+}
+
+.search-icon {
+    margin-right: 5px;
+}
+
+
+
+
 
 .table-container {
     width: 90%;

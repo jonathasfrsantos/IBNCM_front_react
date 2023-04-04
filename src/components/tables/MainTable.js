@@ -3,6 +3,7 @@ import moment from "moment/moment";
 import { useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import { api } from "../../services/lancamentosService/api";
+import { Buttons } from "../buttons/Buttons";
 import { MainCards } from "../cards/MainCards";
 import { MainForm } from "../forms/MainForm";
 
@@ -81,25 +82,29 @@ export function MainTable() {
   // observe os props que são passados do componente mainForm e que são chamados no MainTable
   return (
     <div className="all-container">
-      <Button className="btn-add-transaciton" variant="success"onClick={handleShowForm}>{" "}+ Novo lançamento</Button>
-      <Button className="btn-export-excel" onClick={console.log("click")}>
-        {" "}
-        exportar{" "}
-      </Button>
-      <Button className="btn-print" onClick={console.log("click")}>
-        {" "}
-        imprimir{" "}
-      </Button>
-      <Button className="btn-show" onClick={console.log("click")}>
-        {" "}
-        exibir{" "}
-      </Button>
-      <div className="search-container">
-        <input type="text" placeholder="Pesquisar" />
-        <SearchIcon />
+        <Buttons />
+      <div className="btn-container">
+      
+        <Button className="btn-add-transaciton" variant="success"onClick={handleShowForm}>{" "}+ Novo lançamento</Button>
+        <Button className="btn-export-excel" onClick={console.log("click")}>
+          {" "}
+          exportar{" "}
+        </Button>
+        <Button className="btn-print" onClick={console.log("click")}>
+          {" "}
+          imprimir{" "}
+        </Button>
+        <Button className="btn-show" onClick={console.log("click")}>
+          {" "}
+          exibir{" "}
+        </Button>
+        <div className="search-container">
+          <input type="text" placeholder="Pesquisar..." />
+          <SearchIcon className="search-icon"/>
       
       </div>
 
+      </div>
       <MainForm
         onTransactionUpdated={handleTransactionUpdated}
         onTransactionAdded={handleTransactionAdded}
@@ -110,6 +115,7 @@ export function MainTable() {
       />
       <div className="table-container">
         <MainCards />
+        
         {Array.isArray(transactions) && transactions.length > 0 ? (
           <Table striped hover>
             <thead>
