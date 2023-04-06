@@ -55,6 +55,32 @@ export const api = {
       console.error(error);
       
     }
+  },
+
+  async getAllDefault(){
+    try {
+      const response = await axios.get(`${baseUrl}/currentMonth`);
+      return response.data
+    } catch (error) {
+      console.error(error);
+      
+    }
+  },
+
+  async getAllSelectedPeriod(dataInicial, dataFinal) {
+    try {
+      const response = await axios.get(`${baseUrl}/periodo`, {
+        params: {
+          dataInicial: dataInicial,
+          dataFinal: dataFinal
+        }
+      });
+      return response.data;
+      
+    } catch (error) {
+      console.error(error);
+      
+    }
   }
 
 

@@ -6,8 +6,6 @@ import { api } from "../../services/lancamentosService/api";
 import { Buttons } from "../buttons/Buttons";
 import { MainCards } from "../cards/MainCards";
 import { MainForm } from "../forms/MainForm";
-
-
 import "./styles.css";
 
 export function MainTable() {
@@ -62,12 +60,12 @@ export function MainTable() {
 
   useEffect(() => {
     // hook que lista os itens do BD na tabela
-    async function fetchProducts() {
+    async function fetchTransactions() {
       const response = await api.getAll();
       setTransactions(response);
     }
 
-    fetchProducts();
+    fetchTransactions();
   }, []);
 
   const handleDelete = (id) => {
@@ -82,10 +80,16 @@ export function MainTable() {
   // observe os props que são passados do componente mainForm e que são chamados no MainTable
   return (
     <div className="all-container">
-        <Buttons />
+      <Buttons />
       <div className="btn-container">
-      
-        <Button className="btn-add-transaciton" variant="success"onClick={handleShowForm}>{" "}+ Novo lançamento</Button>
+        <Button
+          className="btn-add-transaciton"
+          variant="success"
+          onClick={handleShowForm}
+        >
+          {" "}
+          + Novo lançamento
+        </Button>
         <Button className="btn-export-excel" onClick={console.log("click")}>
           {" "}
           exportar{" "}
@@ -100,10 +104,8 @@ export function MainTable() {
         </Button>
         <div className="search-container">
           <input type="text" placeholder="Pesquisar..." />
-          <SearchIcon className="search-icon"/>
-      
-      </div>
-
+          <SearchIcon className="search-icon" />
+        </div>
       </div>
       <MainForm
         onTransactionUpdated={handleTransactionUpdated}
@@ -115,7 +117,7 @@ export function MainTable() {
       />
       <div className="table-container">
         <MainCards />
-        
+
         {Array.isArray(transactions) && transactions.length > 0 ? (
           <Table striped hover>
             <thead>
@@ -138,9 +140,9 @@ export function MainTable() {
                     <td>{moment(item.data).format("DD/MM/YYYY")}</td>
                     <td>{item.entrada}</td>
                     <td>{item.saida}</td>
-                    <td>{item.historico.toUpperCase()}</td>
-                    <td>{item.finalidade.toUpperCase()}</td>
-                    <td>{item.bancoCaixa.toUpperCase()}</td>
+                    <td>{item.historico}</td>
+                    <td>{item.finalidade}</td>
+                    <td>{item.bancoCaixa}</td>
                     <td>
                       {" "}
                       <button onClick={() => handleEdit(item)}>

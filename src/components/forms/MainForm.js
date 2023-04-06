@@ -1,7 +1,8 @@
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { api } from "../../services/lancamentosService/api";
 import ClearForm from "../../utils/ClearForm";
+
 import "./styles.css";
 
 export function MainForm({
@@ -23,7 +24,24 @@ export function MainForm({
   });
 
   const [transactionType, setTransactionType] = useState("entrada");
-  const valorRef = useRef(null);
+  const [error, setError] = useState("");
+  const requiredFields = [
+    "data",
+    "valor",
+    "historico",
+    "finalidade",
+    "bancoCaixa",
+  ];
+
+  const validateFields = () => {
+    for (let field of requiredFields) {
+      if (!transaction[field]) {
+        setError(`O campo ${field} é obrigatório.`);
+        return false;
+      }
+    }
+    return true;
+  };
 
   useEffect(() => {
     if (selectedTransaction) {
@@ -47,6 +65,10 @@ export function MainForm({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateFields()) {
+      return;
+    }
 
     let addedTransaction;
 
@@ -77,7 +99,7 @@ export function MainForm({
     }
 
     ClearForm(setTransaction);
-    
+    setError("");
   };
 
   return (
@@ -155,9 +177,18 @@ export function MainForm({
                 onChange={handleChange}
               />
             </Form.Group>
-            <Button variant="primary" type="submit" onClick={handleSubmit}>
-              Salvar
-            </Button>
+            <Modal.Footer>
+              <Button variant="primary" type="submit" onClick={handleSubmit}>
+                Salvar
+              </Button>
+              <Button
+                variant="danger"
+                onClick={() => ClearForm(setTransaction)}
+              >
+                Limpar
+              </Button>
+            </Modal.Footer>
+            {error && <div className="error-message">{error}</div>}
           </Form>
         </Modal.Body>
       </Modal>
