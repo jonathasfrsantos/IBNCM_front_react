@@ -3,17 +3,22 @@ import moment from "moment/moment";
 import { useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import { api } from "../../services/lancamentosService/api";
-import { Buttons } from "../buttons/Buttons";
+
 import { MainCards } from "../cards/MainCards";
 import { MainForm } from "../forms/MainForm";
+
 import "./styles.css";
 
 export function MainTable() {
   const [transactions, setTransactions] = useState([]); // state inicial para o objeto "product"
   const [showForm, setShowForm] = useState(false); // state para controlar a abertura e fechamento do modal/form
   const [selectedTransaction, setSelectedTransaction] = useState({}); // state para recuperar o item selecionado da tabela
-
   const [title, setTitle] = useState("Novo Lançamento");
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+
+
+
 
   const handleEdit = (transaction) => {
     // handle que "seta" o state do produto selecionado
@@ -59,14 +64,20 @@ export function MainTable() {
   }, [showForm]);
 
   useEffect(() => {
-    // hook que lista os itens do BD na tabela
     async function fetchTransactions() {
-      const response = await api.getAll();
-      setTransactions(response);
-    }
+      const response = await api.getAll('/lancamentos', {
+        params: {
+          dataInicio: startDate,
+          dataFim: endDate,
+        },
 
+      });
+      setTransactions(response.data);
+    }
     fetchTransactions();
-  }, []);
+  }, [startDate, endDate]);
+
+
 
   const handleDelete = (id) => {
     // handle delete
@@ -80,7 +91,7 @@ export function MainTable() {
   // observe os props que são passados do componente mainForm e que são chamados no MainTable
   return (
     <div className="all-container">
-      <Buttons />
+ 
       <div className="btn-container">
         <Button
           className="btn-add-transaciton"
@@ -103,7 +114,7 @@ export function MainTable() {
           exibir{" "}
         </Button>
         <div className="search-container">
-          <input type="text" placeholder="Pesquisar..." />
+          <input  type="text" placeholder="Pesquisar..."  />
           <SearchIcon className="search-icon" />
         </div>
       </div>
@@ -119,7 +130,7 @@ export function MainTable() {
         <MainCards />
 
         {Array.isArray(transactions) && transactions.length > 0 ? (
-          <Table striped hover>
+          <Table id="tabela-lancamentos" striped hover>
             <thead>
               <tr>
                 <th>#</th>
@@ -155,6 +166,7 @@ export function MainTable() {
                       </button>
                     </td>
                   </tr>
+                  
                 );
               })}
             </tbody>
@@ -162,7 +174,10 @@ export function MainTable() {
         ) : (
           <p> Não há dados para serem exibidos</p>
         )}
+        
       </div>
+
+
     </div>
   );
 }
