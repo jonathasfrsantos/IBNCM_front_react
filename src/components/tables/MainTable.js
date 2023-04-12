@@ -9,13 +9,16 @@ import { MainForm } from "../forms/MainForm";
 
 import "./styles.css";
 
-export function MainTable() {
+export function MainTable({dataRange}) {
   const [transactions, setTransactions] = useState([]); // state inicial para o objeto "product"
   const [showForm, setShowForm] = useState(false); // state para controlar a abertura e fechamento do modal/form
   const [selectedTransaction, setSelectedTransaction] = useState({}); // state para recuperar o item selecionado da tabela
   const [title, setTitle] = useState("Novo Lançamento");
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setDateRange] = useState("");
+
+
+  
 
 
 
@@ -64,19 +67,16 @@ export function MainTable() {
   }, [showForm]);
 
   useEffect(() => {
+    // hook que lista os itens do BD na tabela
     async function fetchTransactions() {
-      const response = await api.getAll('/lancamentos', {
-        params: {
-          dataInicio: startDate,
-          dataFim: endDate,
-        },
-
-      });
-      setTransactions(response.data);
+      const response = await api.getAllDefault();
+      setTransactions(response);
     }
-    fetchTransactions();
-  }, [startDate, endDate]);
 
+    fetchTransactions();
+  }, []);
+
+  
 
 
   const handleDelete = (id) => {
