@@ -1,4 +1,5 @@
 import { DeleteIcon, EditIcon, SearchIcon } from "@chakra-ui/icons";
+import { isSameMonth, isSameYear } from "date-fns";
 import moment from "moment/moment";
 import { useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
@@ -9,19 +10,13 @@ import { MainForm } from "../forms/MainForm";
 
 import "./styles.css";
 
-export function MainTable({dataRange}) {
+export function MainTable({ dataRange }) {
   const [transactions, setTransactions] = useState([]); // state inicial para o objeto "product"
   const [showForm, setShowForm] = useState(false); // state para controlar a abertura e fechamento do modal/form
   const [selectedTransaction, setSelectedTransaction] = useState({}); // state para recuperar o item selecionado da tabela
   const [title, setTitle] = useState("Novo Lançamento");
   const [startDate, setStartDate] = useState("");
   const [endDate, setDateRange] = useState("");
-
-
-  
-
-
-
 
   const handleEdit = (transaction) => {
     // handle que "seta" o state do produto selecionado
@@ -41,9 +36,21 @@ export function MainTable({dataRange}) {
     setShowForm(true);
   };
 
+  // responsável por adicionar uma nova transação a tabela, atualiza o state da lista, cria um cópia do estado anterior e atualiza com a nova cópia
+
   const handleTransactionAdded = (addedTransaction) => {
-    // handle que "seta" o state do produto criado
-    setTransactions((prevProducts) => [...prevProducts, addedTransaction]);
+    const currentMonth = new Date();
+    if (
+      isSameMonth(new Date(addedTransaction.data), currentMonth) &&
+      isSameYear(new Date(addedTransaction.data), currentMonth)
+    ) {
+      setTransactions((prevTransaction) => [
+        ...prevTransaction,
+        addedTransaction,
+      ]);
+    } else {
+      
+    }
   };
 
   const handleTransactionUpdated = (updatedTransaction) => {
@@ -76,9 +83,6 @@ export function MainTable({dataRange}) {
     fetchTransactions();
   }, []);
 
-  
-
-
   const handleDelete = (id) => {
     // handle delete
     if (window.confirm("Tem certeza que deseja excluir esse lançamento?")) {
@@ -91,7 +95,6 @@ export function MainTable({dataRange}) {
   // observe os props que são passados do componente mainForm e que são chamados no MainTable
   return (
     <div className="all-container">
- 
       <div className="btn-container">
         <Button
           className="btn-add-transaciton"
@@ -114,7 +117,7 @@ export function MainTable({dataRange}) {
           exibir{" "}
         </Button>
         <div className="search-container">
-          <input  type="text" placeholder="Pesquisar..."  />
+          <input type="text" placeholder="Pesquisar..." />
           <SearchIcon className="search-icon" />
         </div>
       </div>
@@ -166,7 +169,6 @@ export function MainTable({dataRange}) {
                       </button>
                     </td>
                   </tr>
-                  
                 );
               })}
             </tbody>
@@ -174,10 +176,7 @@ export function MainTable({dataRange}) {
         ) : (
           <p> Não há dados para serem exibidos</p>
         )}
-        
       </div>
-
-
     </div>
   );
 }

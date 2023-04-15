@@ -8,20 +8,43 @@ export function CalendarButton({ onStartDate, onEndDate }) {
   const [showCalendar, setShowCalendar] = useState(false);
 
   const [dateRange, setDateRange] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
 
   const handleToggleCalendar = () => setShowCalendar(!showCalendar);
   const handleCloseCalendar = () => setShowCalendar(false);
 
+  const handleApplyDateRange = () => {
+    const dataInicial = document.getElementsByName("dataInicial")[0].value;
+    const dataFinal = document.getElementsByName("dataFinal")[0].value;
+    setStartDate(new Date(dataInicial + "T12:00:00"));
+    setEndDate(new Date(dataFinal  + "T12:00:00"));
+    handleCloseCalendar();
+  };
+  
+
+
   useEffect(() => {
-    const today = new Date();
-    const startDate = new Date(today.getFullYear(), today.getMonth(), 1);
-    const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-    setDateRange(
-      `${moment(startDate).format("DD/MM/YYYY")} - ${moment(endDate).format(
-        "DD/MM/YYYY"
-      )}`
-    );
-  }, []);
+    if (startDate && endDate) {
+      const showStartDate = moment(startDate).format("DD/MM/YYYY");
+      const showEndDate = moment(endDate).format("DD/MM/YYYY");
+      setDateRange(`${showStartDate} - ${showEndDate}`);
+    } else {
+      const today = new Date();
+      const startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+      const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+      setDateRange(
+        `${moment(startDate).format("DD/MM/YYYY")} - ${moment(endDate).format(
+          "DD/MM/YYYY")}`
+
+      )
+    }
+  }, [startDate, endDate]);
+
+
+
+
 
   return (
     <div className="drop-container-all">
@@ -43,18 +66,18 @@ export function CalendarButton({ onStartDate, onEndDate }) {
           <Form className="form-inline">
             <Form.Group className="form-group">
               <Form.Label>Data Inicial </Form.Label>
-              <Form.Control type="date" name="dataInicial" />
+              <Form.Control type="date" name="dataInicial" placeholder="DD/MM/YYYY" pattern="\d{2}/\d{2}/\d{4}" />
             </Form.Group>
             <Form.Group className="form-group">
               <Form.Label>Data Final </Form.Label>
-              <Form.Control type="date" name="dataFinal" />
+              <Form.Control type="date" name="dataFinal" placeholder="DD/MM/YYYY" pattern="\d{2}/\d{2}/\d{4}" />
             </Form.Group>
             <div className="footer-group">
               <Button variant="danger" onClick={handleCloseCalendar}>
                 {" "}
                 Cancelar
               </Button>
-              <Button variant="success" onClick={console.log("botão clicado!")}>
+              <Button variant="success" onClick={handleApplyDateRange}>
                 {" "}
                 Aplicar{" "}
               </Button>
