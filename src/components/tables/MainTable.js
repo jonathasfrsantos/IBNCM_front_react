@@ -17,6 +17,7 @@ export function MainTable({ dataRange }) {
   const [title, setTitle] = useState("Novo Lançamento");
   const [startDate, setStartDate] = useState("")
   const [endDate, setEndDate] = useState("")
+ 
 
   const handleEdit = (transaction) => {
     // handle que "seta" o state do produto selecionado
@@ -97,23 +98,32 @@ export function MainTable({ dataRange }) {
     }
   };
 
-
   useEffect(() => {
-    // hook para não copiar os dados do último formulário aberto na hora de inserir um novo registro
-    if (!showForm) {
-      setSelectedTransaction(null);
-      setTitle("Novo Lançamento");
-    }
-  }, [showForm]);
+   
+    if(startDate && endDate){
+      async function fetchTransactions(){
+        const response = await api.getAllSelectedPeriod(startDate, endDate);
+        setTransactions(response)
+      }
+      fetchTransactions();
 
+    } else {
+      async function fetchTransactions(){
+        const response = await api.getAllDefault();
+        setTransactions(response)
+      }
 
-  useEffect(() => {
-    async function fetchTransactions(){
-      const response = await api.getAllSelectedPeriod(startDate, endDate);
-      setTransactions(response)
+      fetchTransactions();
     }
-    fetchTransactions();
+    
   }, [startDate, endDate])
+
+  
+  
+
+
+  
+ 
   
 
    // hook que lista os itens do BD na tabela
