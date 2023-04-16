@@ -4,25 +4,41 @@ import { useEffect, useState } from "react";
 import { Button, Dropdown, Form } from "react-bootstrap";
 import "./styles.css";
 
-export function CalendarButton({ onStartDate, onEndDate }) {
+export function CalendarButton({onStartDate, onEndDate}) {
   const [showCalendar, setShowCalendar] = useState(false);
-
   const [dateRange, setDateRange] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
 
+
   const handleToggleCalendar = () => setShowCalendar(!showCalendar);
   const handleCloseCalendar = () => setShowCalendar(false);
+
+
+  const onDateChange = (startDate, endDate) => {
+    setStartDate(startDate);
+    setEndDate(endDate);
+    onStartDate(startDate);
+    onEndDate(endDate);
+  }
+
+
+
 
   const handleApplyDateRange = () => {
     const dataInicial = document.getElementsByName("dataInicial")[0].value;
     const dataFinal = document.getElementsByName("dataFinal")[0].value;
-    setStartDate(new Date(dataInicial + "T12:00:00"));
-    setEndDate(new Date(dataFinal  + "T12:00:00"));
+     let newStartDate = new Date(dataInicial + "T12:00:00");
+     let newEndDate = new Date(dataFinal + "T12:00:00");
+     setStartDate(newStartDate);
+     setEndDate(newEndDate);
+     onDateChange(newStartDate, newEndDate);
+     console.log(newStartDate)
+     console.log(newEndDate)
+
     handleCloseCalendar();
   };
-  
 
 
   useEffect(() => {
@@ -70,7 +86,7 @@ export function CalendarButton({ onStartDate, onEndDate }) {
             </Form.Group>
             <Form.Group className="form-group">
               <Form.Label>Data Final </Form.Label>
-              <Form.Control type="date" name="dataFinal" placeholder="DD/MM/YYYY" pattern="\d{2}/\d{2}/\d{4}" />
+              <Form.Control type="date" name="dataFinal" placeholder="DD/MM/YYYY" pattern="\d{2}/\d{2}/\d{4}"  />
             </Form.Group>
             <div className="footer-group">
               <Button variant="danger" onClick={handleCloseCalendar}>

@@ -1,22 +1,22 @@
 import { DeleteIcon, EditIcon, SearchIcon } from "@chakra-ui/icons";
-import { isSameMonth, isSameYear } from "date-fns";
+import { isSameMonth, isSameYear, isWithinInterval, formatISO } from "date-fns";
 import moment from "moment/moment";
 import { useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import { api } from "../../services/lancamentosService/api";
-
 import { MainCards } from "../cards/MainCards";
 import { MainForm } from "../forms/MainForm";
-
 import "./styles.css";
+import { CalendarButton } from "../buttons/CalendarButton";
+
 
 export function MainTable({ dataRange }) {
   const [transactions, setTransactions] = useState([]); // state inicial para o objeto "product"
   const [showForm, setShowForm] = useState(false); // state para controlar a abertura e fechamento do modal/form
   const [selectedTransaction, setSelectedTransaction] = useState({}); // state para recuperar o item selecionado da tabela
   const [title, setTitle] = useState("Novo Lançamento");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setDateRange] = useState("");
+  const [startDate, setStartDate] = useState("")
+  const [endDate, setEndDate] = useState("")
 
   const handleEdit = (transaction) => {
     // handle que "seta" o state do produto selecionado
@@ -26,6 +26,17 @@ export function MainTable({ dataRange }) {
 
     console.log(transaction);
   };
+
+  const handleStartDateChange = (newStartDate) => {
+    setStartDate(formatISO(newStartDate, { representation: 'date' }));
+  };
+  
+  const handleEndDateChange = (newEndDate) => {
+    setEndDate(formatISO(newEndDate, { representation: 'date' }));
+  };
+  
+  
+
 
   const handleClose = () => {
     // fecha o modal
@@ -40,6 +51,8 @@ export function MainTable({ dataRange }) {
 
   const handleTransactionAdded = (addedTransaction) => {
     const currentMonth = new Date();
+    const startDateSelected = startDate && startDate();
+    const endDateSelected = endDate && endDate();
     if (
       isSameMonth(new Date(addedTransaction.data), currentMonth) &&
       isSameYear(new Date(addedTransaction.data), currentMonth)
@@ -48,10 +61,20 @@ export function MainTable({ dataRange }) {
         ...prevTransaction,
         addedTransaction,
       ]);
-    } else {
-      
+    } else if (startDate &&
+      endDate &&
+      isWithinInterval(new Date(addedTransaction.data), {
+        start: startDateSelected,
+        end: endDateSelected,
+      })
+    ) {
+      setTransactions((prevTransaction) => [
+        ...prevTransaction,
+        addedTransaction,
+      ]);
     }
   };
+  
 
   const handleTransactionUpdated = (updatedTransaction) => {
     // handle que "seta" o state do produto atualizado
@@ -65,24 +88,6 @@ export function MainTable({ dataRange }) {
     console.log(updatedTransaction);
   };
 
-  useEffect(() => {
-    // hook para não copiar os dados do último formulário aberto na hora de inserir um novo registro
-    if (!showForm) {
-      setSelectedTransaction(null);
-      setTitle("Novo Lançamento");
-    }
-  }, [showForm]);
-
-  useEffect(() => {
-    // hook que lista os itens do BD na tabela
-    async function fetchTransactions() {
-      const response = await api.getAllDefault();
-      setTransactions(response);
-    }
-
-    fetchTransactions();
-  }, []);
-
   const handleDelete = (id) => {
     // handle delete
     if (window.confirm("Tem certeza que deseja excluir esse lançamento?")) {
@@ -92,8 +97,34 @@ export function MainTable({ dataRange }) {
     }
   };
 
+
+  useEffect(() => {
+    // hook para não copiar os dados do último formulário aberto na hora de inserir um novo registro
+    if (!showForm) {
+      setSelectedTransaction(null);
+      setTitle("Novo Lançamento");
+    }
+  }, [showForm]);
+
+
+  useEffect(() => {
+    async function fetchTransactions(){
+      const response = await api.getAllSelectedPeriod(startDate, endDate);
+      setTransactions(response)
+    }
+    fetchTransactions();
+  }, [startDate, endDate])
+  
+
+   // hook que lista os itens do BD na tabela
+  
+  
+  
+  
+
   // observe os props que são passados do componente mainForm e que são chamados no MainTable
   return (
+    
     <div className="all-container">
       <div className="btn-container">
         <Button
@@ -104,6 +135,9 @@ export function MainTable({ dataRange }) {
           {" "}
           + Novo lançamento
         </Button>
+        <label>{moment(startDate).format("DD/MM/YYYY")}</label>
+        <label>   _____ </label>
+        <label>{moment(endDate).format("DD/MM/YYYY")}</label>
         <Button className="btn-export-excel" onClick={console.log("click")}>
           {" "}
           exportar{" "}
@@ -116,11 +150,13 @@ export function MainTable({ dataRange }) {
           {" "}
           exibir{" "}
         </Button>
+
         <div className="search-container">
           <input type="text" placeholder="Pesquisar..." />
           <SearchIcon className="search-icon" />
         </div>
       </div>
+    
       <MainForm
         onTransactionUpdated={handleTransactionUpdated}
         onTransactionAdded={handleTransactionAdded}
@@ -131,7 +167,9 @@ export function MainTable({ dataRange }) {
       />
       <div className="table-container">
         <MainCards />
-
+        <CalendarButton onStartDate={handleStartDateChange} onEndDate={handleEndDateChange} />
+        
+        
         {Array.isArray(transactions) && transactions.length > 0 ? (
           <Table id="tabela-lancamentos" striped hover>
             <thead>
@@ -147,6 +185,7 @@ export function MainTable({ dataRange }) {
               </tr>
             </thead>
             <tbody>
+              
               {transactions.map((item, index) => {
                 return (
                   <tr key={index}>
@@ -157,6 +196,7 @@ export function MainTable({ dataRange }) {
                     <td>{item.historico}</td>
                     <td>{item.finalidade}</td>
                     <td>{item.bancoCaixa}</td>
+                    
                     <td>
                       {" "}
                       <button onClick={() => handleEdit(item)}>
