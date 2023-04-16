@@ -69,7 +69,7 @@ export const api = {
 
   async getAllSelectedPeriod(dataInicial, dataFinal) {
     try {
-      const response = await axios.get(`${baseUrl}/periodo`, {
+      const response = await axios.get(`${baseUrl}/getByDateInterval`, {
         params: {
           dataInicial: dataInicial,
           dataFinal: dataFinal
