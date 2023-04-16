@@ -17,7 +17,7 @@ export function MainTable({ dataRange }) {
   const [title, setTitle] = useState("Novo Lançamento");
   const [startDate, setStartDate] = useState("")
   const [endDate, setEndDate] = useState("")
- 
+
 
   const handleEdit = (transaction) => {
     // handle que "seta" o state do produto selecionado
@@ -31,13 +31,10 @@ export function MainTable({ dataRange }) {
   const handleStartDateChange = (newStartDate) => {
     setStartDate(formatISO(newStartDate, { representation: 'date' }));
   };
-  
+
   const handleEndDateChange = (newEndDate) => {
     setEndDate(formatISO(newEndDate, { representation: 'date' }));
   };
-  
-  
-
 
   const handleClose = () => {
     // fecha o modal
@@ -75,7 +72,7 @@ export function MainTable({ dataRange }) {
       ]);
     }
   };
-  
+
 
   const handleTransactionUpdated = (updatedTransaction) => {
     // handle que "seta" o state do produto atualizado
@@ -99,42 +96,50 @@ export function MainTable({ dataRange }) {
   };
 
   useEffect(() => {
-   
-    if(startDate && endDate){
-      async function fetchTransactions(){
+    // hook para não copiar os dados do último formulário aberto na hora de inserir um novo registro
+    if (!showForm) {
+      setSelectedTransaction(null);
+      setTitle("Novo Lançamento");
+    }
+  }, [showForm]);
+
+  useEffect(() => {
+
+    if (startDate && endDate) {
+      async function fetchTransactions() {
         const response = await api.getAllSelectedPeriod(startDate, endDate);
         setTransactions(response)
       }
       fetchTransactions();
 
     } else {
-      async function fetchTransactions(){
+      async function fetchTransactions() {
         const response = await api.getAllDefault();
         setTransactions(response)
       }
 
       fetchTransactions();
     }
-    
+
   }, [startDate, endDate])
 
-  
-  
 
 
-  
- 
-  
 
-   // hook que lista os itens do BD na tabela
-  
-  
-  
-  
+
+
+
+
+
+  // hook que lista os itens do BD na tabela
+
+
+
+
 
   // observe os props que são passados do componente mainForm e que são chamados no MainTable
   return (
-    
+
     <div className="all-container">
       <div className="btn-container">
         <Button
@@ -145,9 +150,6 @@ export function MainTable({ dataRange }) {
           {" "}
           + Novo lançamento
         </Button>
-        <label>{moment(startDate).format("DD/MM/YYYY")}</label>
-        <label>   _____ </label>
-        <label>{moment(endDate).format("DD/MM/YYYY")}</label>
         <Button className="btn-export-excel" onClick={console.log("click")}>
           {" "}
           exportar{" "}
@@ -166,7 +168,7 @@ export function MainTable({ dataRange }) {
           <SearchIcon className="search-icon" />
         </div>
       </div>
-    
+
       <MainForm
         onTransactionUpdated={handleTransactionUpdated}
         onTransactionAdded={handleTransactionAdded}
@@ -178,8 +180,8 @@ export function MainTable({ dataRange }) {
       <div className="table-container">
         <MainCards />
         <CalendarButton onStartDate={handleStartDateChange} onEndDate={handleEndDateChange} />
-        
-        
+
+
         {Array.isArray(transactions) && transactions.length > 0 ? (
           <Table id="tabela-lancamentos" striped hover>
             <thead>
@@ -195,7 +197,7 @@ export function MainTable({ dataRange }) {
               </tr>
             </thead>
             <tbody>
-              
+
               {transactions.map((item, index) => {
                 return (
                   <tr key={index}>
@@ -206,7 +208,7 @@ export function MainTable({ dataRange }) {
                     <td>{item.historico}</td>
                     <td>{item.finalidade}</td>
                     <td>{item.bancoCaixa}</td>
-                    
+
                     <td>
                       {" "}
                       <button onClick={() => handleEdit(item)}>

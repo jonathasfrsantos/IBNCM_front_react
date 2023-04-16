@@ -59,7 +59,7 @@ export const api = {
 
   async getAllDefault(){
     try {
-      const response = await axios.get(`${baseUrl}/currentMonth`);
+      const response = await axios.get(`${baseUrl}/getByCurrentMonth`);
       return response.data
     } catch (error) {
       console.error(error);
