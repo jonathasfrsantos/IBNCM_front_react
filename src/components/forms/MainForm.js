@@ -43,6 +43,9 @@ export function MainForm({
     return true;
   };
 
+  const colorClass = transactionType === "entrada" ? "green-text" : "red-text";
+
+
   useEffect(() => {
     if (selectedTransaction) {
       const { entrada, saida, ...transactionData } = selectedTransaction;
@@ -145,12 +148,13 @@ export function MainForm({
                 value={transaction.data}
                 onChange={handleChange}
               />
-              <Form.Label> Valor R$ </Form.Label>
+              <Form.Label className={`${colorClass}`}> Valor R$ </Form.Label>
               <Form.Control
                 type="number"
                 name="valor"
                 value={transaction.valor}
                 onChange={handleChange}
+                className={`${colorClass}`}
               />
 
               <Form.Label> Histórico </Form.Label>

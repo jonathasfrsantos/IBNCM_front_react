@@ -1,5 +1,5 @@
 import { DeleteIcon, EditIcon, SearchIcon } from "@chakra-ui/icons";
-import { isSameMonth, isSameYear, isWithinInterval, formatISO } from "date-fns";
+import { isSameMonth, isSameYear, isWithinInterval, formatISO, format } from "date-fns";
 import moment from "moment/moment";
 import { useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
@@ -15,8 +15,12 @@ export function MainTable({ dataRange }) {
   const [showForm, setShowForm] = useState(false); // state para controlar a abertura e fechamento do modal/form
   const [selectedTransaction, setSelectedTransaction] = useState({}); // state para recuperar o item selecionado da tabela
   const [title, setTitle] = useState("Novo Lançamento");
-  const [startDate, setStartDate] = useState("")
-  const [endDate, setEndDate] = useState("")
+  let today = new Date();
+  const [startDate, setStartDate] = useState(new Date(today.getFullYear(), today.getMonth(), 1));
+  const [endDate, setEndDate] = useState(new Date(today.getFullYear(), today.getMonth() + 1, 0));
+  const formattedStartDate = format(startDate, 'yyyy-MM-dd')
+  const formattedEndDate = format(endDate, 'yyyy-MM-dd')
+
 
 
   const handleEdit = (transaction) => {
@@ -29,11 +33,11 @@ export function MainTable({ dataRange }) {
   };
 
   const handleStartDateChange = (newStartDate) => {
-    setStartDate(formatISO(newStartDate, { representation: 'date' }));
+    setStartDate(newStartDate)
   };
 
   const handleEndDateChange = (newEndDate) => {
-    setEndDate(formatISO(newEndDate, { representation: 'date' }));
+    setEndDate(newEndDate)
   };
 
   const handleClose = () => {
@@ -48,30 +52,19 @@ export function MainTable({ dataRange }) {
   // responsável por adicionar uma nova transação a tabela, atualiza o state da lista, cria um cópia do estado anterior e atualiza com a nova cópia
 
   const handleTransactionAdded = (addedTransaction) => {
-    const currentMonth = new Date();
-    const startDateSelected = startDate && startDate();
-    const endDateSelected = endDate && endDate();
-    if (
-      isSameMonth(new Date(addedTransaction.data), currentMonth) &&
-      isSameYear(new Date(addedTransaction.data), currentMonth)
-    ) {
+    const startDateSelected = startDate
+    const endDateSelected = endDate 
+    if(startDate && endDate && isWithinInterval(new Date(addedTransaction.data), {start: startDateSelected, end:endDateSelected})){
+
       setTransactions((prevTransaction) => [
         ...prevTransaction,
         addedTransaction,
       ]);
-    } else if (startDate &&
-      endDate &&
-      isWithinInterval(new Date(addedTransaction.data), {
-        start: startDateSelected,
-        end: endDateSelected,
-      })
-    ) {
-      setTransactions((prevTransaction) => [
-        ...prevTransaction,
-        addedTransaction,
-      ]);
+
     }
+
   };
+  
 
 
   const handleTransactionUpdated = (updatedTransaction) => {
@@ -104,24 +97,27 @@ export function MainTable({ dataRange }) {
   }, [showForm]);
 
   useEffect(() => {
-
-    if (startDate && endDate) {
-      async function fetchTransactions() {
-        const response = await api.getAllSelectedPeriod(startDate, endDate);
-        setTransactions(response)
+    async function fetchTransactions() {
+      if (startDate && endDate) {
+        const response = await api.getAllSelectedPeriod(
+          moment(startDate).format('YYYY-MM-DD'),
+          moment(endDate).format('YYYY-MM-DD')
+        );
+        setTransactions(response);
+      } else {
+        const response = await api.getAllSelectedPeriod(
+          formattedStartDate,
+          formattedEndDate
+        );
+        setTransactions(response);
       }
-      fetchTransactions();
-
-    } else {
-      async function fetchTransactions() {
-        const response = await api.getAllDefault();
-        setTransactions(response)
-      }
-
-      fetchTransactions();
     }
-
-  }, [startDate, endDate])
+    fetchTransactions();
+  }, [formattedStartDate, formattedEndDate, startDate, endDate]);
+  
+  
+  
+  
 
 
 
@@ -139,8 +135,10 @@ export function MainTable({ dataRange }) {
 
   // observe os props que são passados do componente mainForm e que são chamados no MainTable
   return (
+  
 
     <div className="all-container">
+        <CalendarButton onStartDate={handleStartDateChange} onEndDate={handleEndDateChange} />
       <div className="btn-container">
         <Button
           className="btn-add-transaciton"
@@ -179,7 +177,7 @@ export function MainTable({ dataRange }) {
       />
       <div className="table-container">
         <MainCards />
-        <CalendarButton onStartDate={handleStartDateChange} onEndDate={handleEndDateChange} />
+      
 
 
         {Array.isArray(transactions) && transactions.length > 0 ? (
@@ -226,7 +224,7 @@ export function MainTable({ dataRange }) {
             </tbody>
           </Table>
         ) : (
-          <p> Não há dados para serem exibidos</p>
+          <p> Não há dados para serem exibidos para o intervalo de datas selecionado</p>
         )}
       </div>
     </div>

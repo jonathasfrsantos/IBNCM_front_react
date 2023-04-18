@@ -23,9 +23,6 @@ export function CalendarButton({onStartDate, onEndDate}) {
     onEndDate(endDate);
   }
 
-
-
-
   const handleApplyDateRange = () => {
     const dataInicial = document.getElementsByName("dataInicial")[0].value;
     const dataFinal = document.getElementsByName("dataFinal")[0].value;
@@ -33,11 +30,8 @@ export function CalendarButton({onStartDate, onEndDate}) {
      let newEndDate = new Date(dataFinal + "T12:00:00");
      setStartDate(newStartDate);
      setEndDate(newEndDate);
-     onDateChange(newStartDate, newEndDate);
-     console.log(newStartDate)
-     console.log(newEndDate)
-
-    handleCloseCalendar();
+     onDateChange(newStartDate, newEndDate);  
+     handleCloseCalendar();
   };
 
 
