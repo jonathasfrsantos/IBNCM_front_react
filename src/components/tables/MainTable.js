@@ -4,6 +4,7 @@ import moment from "moment/moment";
 import { useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import { api } from "../../services/lancamentosService/api";
+
 import { MainCards } from "../cards/MainCards";
 import { MainForm } from "../forms/MainForm";
 import "./styles.css";
@@ -20,6 +21,7 @@ export function MainTable({ dataRange }) {
   const [endDate, setEndDate] = useState(new Date(today.getFullYear(), today.getMonth() + 1, 0));
   const formattedStartDate = format(startDate, 'yyyy-MM-dd')
   const formattedEndDate = format(endDate, 'yyyy-MM-dd')
+ 
 
 
 
@@ -53,8 +55,8 @@ export function MainTable({ dataRange }) {
 
   const handleTransactionAdded = (addedTransaction) => {
     const startDateSelected = startDate
-    const endDateSelected = endDate 
-    if(startDate && endDate && isWithinInterval(new Date(addedTransaction.data), {start: startDateSelected, end:endDateSelected})){
+    const endDateSelected = endDate
+    if (startDate && endDate && isWithinInterval(new Date(addedTransaction.data), { start: startDateSelected, end: endDateSelected })) {
 
       setTransactions((prevTransaction) => [
         ...prevTransaction,
@@ -64,7 +66,7 @@ export function MainTable({ dataRange }) {
     }
 
   };
-  
+
 
 
   const handleTransactionUpdated = (updatedTransaction) => {
@@ -87,6 +89,7 @@ export function MainTable({ dataRange }) {
       });
     }
   };
+
 
   useEffect(() => {
     // hook para não copiar os dados do último formulário aberto na hora de inserir um novo registro
@@ -114,31 +117,14 @@ export function MainTable({ dataRange }) {
     }
     fetchTransactions();
   }, [formattedStartDate, formattedEndDate, startDate, endDate]);
-  
-  
-  
-  
-
-
-
-
-
-
-
-
-
   // hook que lista os itens do BD na tabela
-
-
-
-
-
   // observe os props que são passados do componente mainForm e que são chamados no MainTable
   return (
-  
+
 
     <div className="all-container">
-        <CalendarButton onStartDate={handleStartDateChange} onEndDate={handleEndDateChange} />
+      <CalendarButton onStartDate={handleStartDateChange} onEndDate={handleEndDateChange} />
+      <MainCards />
       <div className="btn-container">
         <Button
           className="btn-add-transaciton"
@@ -150,23 +136,18 @@ export function MainTable({ dataRange }) {
         </Button>
         <Button className="btn-export-excel" onClick={console.log("click")}>
           {" "}
-          exportar{" "}
+          exportar para excel{" "}
         </Button>
         <Button className="btn-print" onClick={console.log("click")}>
           {" "}
           imprimir{" "}
         </Button>
-        <Button className="btn-show" onClick={console.log("click")}>
-          {" "}
-          exibir{" "}
-        </Button>
-
         <div className="search-container">
           <input type="text" placeholder="Pesquisar..." />
           <SearchIcon className="search-icon" />
-        </div>
+        </div>       
       </div>
-
+      
       <MainForm
         onTransactionUpdated={handleTransactionUpdated}
         onTransactionAdded={handleTransactionAdded}
@@ -176,12 +157,12 @@ export function MainTable({ dataRange }) {
         title={title}
       />
       <div className="table-container">
-        <MainCards />
       
 
 
+
         {Array.isArray(transactions) && transactions.length > 0 ? (
-          <Table id="tabela-lancamentos" striped hover>
+          <Table id="tabela-lancamentos"  hover>
             <thead>
               <tr>
                 <th>#</th>
@@ -201,8 +182,8 @@ export function MainTable({ dataRange }) {
                   <tr key={index}>
                     <td>{index + 1}</td>
                     <td>{moment(item.data).format("DD/MM/YYYY")}</td>
-                    <td>{item.entrada}</td>
-                    <td>{item.saida}</td>
+                    <td className="entrada">{item.entrada}</td>
+                    <td className="saida">{item.saida }</td>
                     <td>{item.historico}</td>
                     <td>{item.finalidade}</td>
                     <td>{item.bancoCaixa}</td>

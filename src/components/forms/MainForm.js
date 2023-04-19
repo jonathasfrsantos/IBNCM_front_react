@@ -1,7 +1,8 @@
 import { Fragment, useEffect, useState } from "react";
-import { Button, Form, Modal } from "react-bootstrap";
+import { Button, Dropdown, Form, Modal } from "react-bootstrap";
 import { api } from "../../services/lancamentosService/api";
 import ClearForm from "../../utils/ClearForm";
+import { FinalidadeApi } from "../../services/finalidadeService/FinalidadeApi";
 
 import "./styles.css";
 
@@ -44,6 +45,13 @@ export function MainForm({
   };
 
   const colorClass = transactionType === "entrada" ? "green-text" : "red-text";
+  const [suggestions, setSuggestions] = useState([]);
+
+
+  const handleChange = (e) => {
+    setTransaction({ ...transaction, [e.target.name]: e.target.value }); // handleChange é usado para acompanhar os estados que o usuário está digitando no input
+  };
+
 
 
   useEffect(() => {
@@ -62,9 +70,7 @@ export function MainForm({
     }
   }, [selectedTransaction]);
 
-  const handleChange = (e) => {
-    setTransaction({ ...transaction, [e.target.name]: e.target.value }); // handleChange é usado para acompanhar os estados que o usuário está digitando no input
-  };
+ 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -104,6 +110,14 @@ export function MainForm({
     ClearForm(setTransaction);
     setError("");
   };
+
+  useEffect(() => {
+    async function fetchFinalities(){
+      const response = await FinalidadeApi.getAll()
+      setSuggestions(response)
+    }
+    fetchFinalities();
+  }, []);
 
   return (
     <Fragment>
@@ -172,14 +186,19 @@ export function MainForm({
                 value={transaction.finalidade}
                 onChange={handleChange}
               />
-
               <Form.Label> Banco/Caixa </Form.Label>
               <Form.Control
-                type="text"
+                as="select"
                 name="bancoCaixa"
                 value={transaction.bancoCaixa}
                 onChange={handleChange}
-              />
+                className="banco-select"
+              >
+                <option  value="">Selecione uma opção</option>
+                <option value="CAIXA">CAIXA</option>
+                <option value="ITAÚ">ITAÚ</option>
+              </Form.Control>
+
             </Form.Group>
             <Modal.Footer>
               <Button variant="primary" type="submit" onClick={handleSubmit}>

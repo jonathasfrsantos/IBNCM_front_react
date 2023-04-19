@@ -1,14 +1,14 @@
 .cards-container {
-   width: 80%;
     text-align: center;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    margin: 100px 0px 40px 160px;
+    justify-content:center;
+    margin: 20px 10px 20px 20px;;
    
   }
 
   .card-entrada {
+    margin-right: 60px;
     width: 250px;
     height: 100px;
     border-radius: 3%;
@@ -24,6 +24,7 @@
   }
 
   .card-saida {
+    margin-right: 60px;
     width: 250px;
     height: 100px;
     border-radius: 3%;
@@ -40,6 +41,7 @@
   }
 
   .card-saldo-anterior {
+    margin-right: 60px;
     width: 250px;
     height: 100px;
     border-radius: 3%;
@@ -55,6 +57,7 @@
     color: rgb(48, 190, 255);
   }
   .card-saldo-atual {
+    margin-right: 60px;
     width: 250px;
     height: 100px;
     border-radius: 3%;

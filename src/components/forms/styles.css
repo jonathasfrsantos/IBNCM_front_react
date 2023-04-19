@@ -68,6 +68,13 @@
     margin-bottom: 10px;
     font-size: 20px;
   }
+  
+  .banco-select {
+    flex-basis: 65%;
+    margin-left: 1%;
+    margin-bottom: 10px;
+    font-size: 20px;
+  }
 
   .modal-footer {
     margin-left: 10px;
