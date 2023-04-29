@@ -12,8 +12,10 @@ import { CalendarButton } from "../buttons/CalendarButton";
 
 
 
-export function MainTable({ dataRange }) {
+export function MainTable() {
   const [transactions, setTransactions] = useState([]); // state inicial para o objeto "product"
+
+
   const [showForm, setShowForm] = useState(false); // state para controlar a abertura e fechamento do modal/form
   const [selectedTransaction, setSelectedTransaction] = useState({}); // state para recuperar o item selecionado da tabela
   const [title, setTitle] = useState("Novo Lançamento");
@@ -22,6 +24,15 @@ export function MainTable({ dataRange }) {
   const [endDate, setEndDate] = useState(new Date(today.getFullYear(), today.getMonth() + 1, 0));
   const formattedStartDate = format(startDate, 'yyyy-MM-dd')
   const formattedEndDate = format(endDate, 'yyyy-MM-dd')
+  const [search, setSearchTerm] = useState("")
+
+  const filteredTransactions = transactions.filter(transaction => 
+    ['data', 'entrada', 'saida', 'historico', 'finalidade', 'bancoCaixa'].some(prop => 
+      String(transaction[prop]).toLowerCase().includes(search.toLowerCase())
+    )
+  );
+  
+
 
   const handleEdit = (transaction) => {
     // handle que "seta" o state do produto selecionado
@@ -48,6 +59,7 @@ export function MainTable({ dataRange }) {
     // exibie o modal
     setShowForm(true);
   };
+
 
   // responsável por adicionar uma nova transação a tabela, atualiza o state da lista, cria um cópia do estado anterior e atualiza com a nova cópia
 
@@ -139,7 +151,11 @@ export function MainTable({ dataRange }) {
           imprimir{" "}
         </Button>
         <div className="search-container">
-          <input type="text" placeholder="Pesquisar..." />
+          <input type="text" placeholder="Pesquisar..."
+          value={search}
+          onChange={(e) => setSearchTerm(e.target.value) }
+        
+        />
           <SearchIcon className="search-icon" />
         </div>       
       </div>
@@ -173,7 +189,7 @@ export function MainTable({ dataRange }) {
             </thead>
             <tbody>
 
-              {transactions.map((item, index) => {
+              {filteredTransactions.map((item, index) => {
                 return (
                   <tr key={index}>
                     <td>{index + 1}</td>
