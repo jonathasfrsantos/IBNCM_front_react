@@ -7,8 +7,9 @@ import { api } from "../../services/lancamentosService/api";
 
 import { MainCards } from "../cards/MainCards";
 import { MainForm } from "../forms/MainForm";
-import "./styles.css";
+import "./mainTableStyles.css";
 import { CalendarButton } from "../buttons/CalendarButton";
+
 
 
 export function MainTable({ dataRange }) {
@@ -21,9 +22,6 @@ export function MainTable({ dataRange }) {
   const [endDate, setEndDate] = useState(new Date(today.getFullYear(), today.getMonth() + 1, 0));
   const formattedStartDate = format(startDate, 'yyyy-MM-dd')
   const formattedEndDate = format(endDate, 'yyyy-MM-dd')
- 
-
-
 
   const handleEdit = (transaction) => {
     // handle que "seta" o state do produto selecionado
@@ -124,7 +122,6 @@ export function MainTable({ dataRange }) {
 
     <div className="all-container">
       <CalendarButton onStartDate={handleStartDateChange} onEndDate={handleEndDateChange} />
-      <MainCards />
       <div className="btn-container">
         <Button
           className="btn-add-transaciton"
@@ -135,10 +132,9 @@ export function MainTable({ dataRange }) {
           + Novo lançamento
         </Button>
         <Button className="btn-export-excel" onClick={console.log("click")}>
-          {" "}
           exportar para excel{" "}
         </Button>
-        <Button className="btn-print" onClick={console.log("click")}>
+        <Button className="btn-print" onClick={() => window.print()}>
           {" "}
           imprimir{" "}
         </Button>
@@ -172,7 +168,7 @@ export function MainTable({ dataRange }) {
                 <th>HISTÓRICO</th>
                 <th>FINALIDADE</th>
                 <th>BANCO/CAIXA</th>
-                <th>AÇÕES</th>
+                <th className="head-column-actions">AÇÕES</th>
               </tr>
             </thead>
             <tbody>
@@ -188,7 +184,7 @@ export function MainTable({ dataRange }) {
                     <td>{item.finalidade}</td>
                     <td>{item.bancoCaixa}</td>
 
-                    <td>
+                    <td  className="row-actions">
                       {" "}
                       <button onClick={() => handleEdit(item)}>
                         {" "}

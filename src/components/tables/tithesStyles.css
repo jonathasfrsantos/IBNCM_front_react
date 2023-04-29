@@ -1,0 +1,23 @@
+.general-container {
+    margin-top: 100px;
+    margin-left: 70px;
+    align-items: center;
+    text-align: center;
+    width: 90%;
+ 
+}
+
+h1 {
+    border: solid 1px green;
+    margin-bottom: 0px;
+
+}
+
+p {
+    border: solid 1px green;
+    margin-bottom: 0px;
+}
+
+thead {
+    background-color: green;
+}

@@ -3,13 +3,44 @@
 }
 
 .btn-container {
+
 margin-top: 20px;
 margin-left: 35px;
 display: inline;
 text-align: left;
 
-  
 }
+@media print {
+    * {
+      visibility: visible;
+    }
+    
+    .head-column-actions {
+      display: none !important;
+    }
+  }
+
+  @media print {
+    * {
+      visibility: visible;
+    }
+    
+    .row-actions {
+      display: none !important;
+    }
+  }
+
+
+@media print {
+    * {
+      visibility: visible;
+    }
+    
+    .btn-container {
+      display: none !important;
+    }
+  }
+  
 
 .btn-container button {
     margin-left: 20px;

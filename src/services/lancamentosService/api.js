@@ -81,6 +81,15 @@ export const api = {
       console.error(error);
       
     }
+  },
+  async getAllTithes(){
+    try {
+      const response = await axios.get(`${baseUrl}/getAllDizimos`);
+      return response.data
+    } catch (error) {
+      console.error(error)
+      
+    }
   }
 
 
